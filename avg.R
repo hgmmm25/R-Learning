@@ -1,14 +1,21 @@
 avg <- function(x) {
-  if (!is.integer(x)) {
-    warning("Input Valid.")
-    message("Try to transform the input.")
-    x <- as.integer(x)
+  # 1 .檢查是否為數值型態，若不是則嘗試轉型
+  if (!is.numeric(x)) {
+    warning("Input is not numeric. Attempting to convert...")
+    x <- suppressWarnings(as.numeric(x))
+
+    # 轉型後若產生 NA，代表包含無法轉成數字的內容（如字串）
     if (any(is.na(x))) {
-      stop("Transformation failed!")
+      stop("Transformation failed! Input contains non-numeric values.")
     }
   }
+
+  # 2. 檢查空向量
+  if (length(x) == 0) {
+    warning("Input vector is empty.")
+    return(NaN)
+  }
+
+  # 3. 計算平均值
   sum(x) / length(x)
 }
-avg(c("1", "2", "3"))
-avg(c("p", "2", "3"))
-avg(c(NA, "8", "9"))
